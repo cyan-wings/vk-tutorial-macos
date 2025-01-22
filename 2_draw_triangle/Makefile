@@ -1,3 +1,5 @@
+SHELL := /bin/zsh
+
 VK = ../../VulkanSDK/macOS
 
 export VULKAN_SDK=$(VK)
@@ -7,7 +9,8 @@ export VK_ICD_FILENAMES=$(VK)/share/vulkan/icd.d/MoltenVK_icd.json
 export VK_LAYER_PATH=$(VK)/share/vulkan/explicit_layer.d
 
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -O2 -g
+#FSANITIZE = -fsanitize=address
+CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -O2 -g$(if $(FSANITIZE), $(FSANITIZE))
 INCLUDES = -I/opt/homebrew/include -I$(VK)/include
 LIBS = -lvulkan -L$(VK)/lib -lglfw -L/opt/homebrew/lib
 
@@ -25,6 +28,9 @@ $(NAME): $(OBJS)
 
 run:
 	./$(NAME)
+
+debug:
+	. ./debug.sh
 
 clean:
 	rm -rf $(OBJS)
